@@ -1,0 +1,81 @@
+Hello world from rank 0 of 4
+ Running in parallel with 4 tasks 
+Hello world from rank 1 of 4
+Hello world from rank 2 of 4
+Hello world from rank 3 of 4
+ Created new tasks 0
+ MPI coordinates for rank 0 -> 0 0 0
+ Constructor
+ axes
+wtf
+ Making linear grid from -0.5 0.5 with 64 cells
+ Making linear grid from -0.5 0.5 with 64 cells
+ Making linear grid from -0.5 0.5 with 64 cells
+ Created new tasks 1
+ MPI coordinates for rank 1 -> 0 1 0
+ Constructor
+ axes
+wtf
+ Making linear grid from -0.5 0.5 with 64 cells
+ Making linear grid from -0.5 0.5 with 64 cells
+ Making linear grid from -0.5 0.5 with 64 cells
+ Created new tasks 2
+ MPI coordinates for rank 2 -> 1 0 0
+ Constructor
+ axes
+wtf
+ Making linear grid from -0.5 0.5 with 64 cells
+ Making linear grid from -0.5 0.5 with 64 cells
+ Making linear grid from -0.5 0.5 with 64 cells
+ Properties of grid 2 0 -0.5 -0.5 0.5 0 0.5 
+ Constructor
+ axes
+wtf
+ Created new tasks 3
+ MPI coordinates for rank 3 -> 1 1 0
+ Constructor
+ axes
+wtf
+ Making linear grid from -0.5 0.5 with 64 cells
+ Making linear grid from -0.5 0.5 with 64 cells
+ Making linear grid from -0.5 0.5 with 64 cells
+ Making linear grid from 0 0.5 with 32 cells
+ Making linear grid from -0.5 0 with 32 cells
+ Making linear grid from -0.5 0.5 with 64 cells
+ Properties of grid 1 -0.5 0 -0.5 0 0.5 0.5 
+ Constructor
+ axes
+wtf
+ Making linear grid from -0.5 0 with 32 cells
+ Making linear grid from 0 0.5 with 32 cells
+ Making linear grid from -0.5 0.5 with 64 cells
+ Properties of grid 3 0 0 -0.5 0.5 0.5 0.5 
+ Constructor
+ axes
+wtf
+ Making linear grid from 0 0.5 with 32 cells
+ Making linear grid from 0 0.5 with 32 cells
+ Making linear grid from -0.5 0.5 with 64 cells
+Anfang: 0.0078125 0
+Anfang: -0.492188 -0.5
+Ende: -0.0078125-0.015625
+ Properties of grid 0 -0.5 -0.5 -0.5 0 0 0.5 
+ Constructor
+ axes
+wtf
+ Making linear grid from -0.5 0 with 32 cells
+ Making linear grid from -0.5 0 with 32 cells
+ Making linear grid from -0.5 0.5 with 64 cells
+Anfang: 0.0078125 0
+Ende: 0.4921880.484375
+Ende: 0.4921880.484375
+Anfang: -0.492188 -0.5
+Ende: -0.0078125-0.015625
+ Volume of Sedov region: 0.00415039
+ Number of Sedov cells: 1088
+ Volume of Sedov region: 0.00415039
+ Number of Sedov cells: 1088
+ Volume of Sedov region: 0.00415039
+ Number of Sedov cells: 1088
+ Volume of Sedov region: 0.00415039
+ Number of Sedov cells: 1088

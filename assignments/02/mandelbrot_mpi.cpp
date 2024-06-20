@@ -1,3 +1,4 @@
+#include <mpi.h>   // Include the MPI header
 #include <bits/chrono.h>
 #include <cstdint>
 #include <cstdlib>
@@ -14,10 +15,10 @@
 #pragma GCC diagnostic ignored "-Wstringop-overflow"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
-#pragma GCC diagnostic push
+#pragma GCC diagnostic pop
 
-constexpr int default_size_x = 1280;
-constexpr int default_size_y = 720;
+constexpr int default_size_x = 1344;
+constexpr int default_size_y = 768;
 
 // RGB image will hold 3 color channels
 constexpr int num_channels = 3;
@@ -65,7 +66,7 @@ auto HSVToRGB(double H, const double S, double V) {
 	return std::make_tuple(R, G, B);
 }
 
-void calcMandelbrot(Image &image, int size_x, int size_y) {
+void calcMandelbrot(Image &image, int size_x, int size_y, int argc, char** argv) {
 
 	auto time_start = std::chrono::high_resolution_clock::now();
 	
@@ -79,9 +80,27 @@ void calcMandelbrot(Image &image, int size_x, int size_y) {
 	// 2) result aggregation
 	//   - aggregate the individual parts of the ranks into a single, complete image on the root rank (rank 0)
 
-	for (int pixel_y = 0; pixel_y < size_y; pixel_y++) {
+	MPI_Init(&argc, &argv); // initialize the MPI environment
+	int numproc;
+	MPI_Comm_size(MPI_COMM_WORLD, &numproc); // get the number of ranks
+	int rank;
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank); // get the rank of the caller
+
+	// if matrix size not divisible
+	if(size_y % numproc != 0) {
+		MPI_Finalize();
+		std::cout << "EXIT_FAILURE" << std::endl;
+		}
+
+	// compute boundaries of local computation
+	int start = rank*size_y/numproc; //numproc should be 12, thus size_y is divisible by numproc
+	int end = (rank+1)*size_y/numproc;
+
+	for (int pixel_y = start; pixel_y < end; pixel_y++) {
 		// scale y pixel into mandelbrot coordinate system
-		const float cy = (pixel_y / (float)size_y) * (top - bottom) + bottom;
+		const float cy = (pixel_y / (float)size_y) * (top - bottom) + bottom ; //start is a const equal to number iterations per loop*rank
+
+
 		for (int pixel_x = 0; pixel_x < size_x; pixel_x++) {
 			// scale x pixel into mandelbrot coordinate system
 			const float cx = (pixel_x / (float)size_x) * (right - left) + left;
@@ -108,7 +127,18 @@ void calcMandelbrot(Image &image, int size_x, int size_y) {
 			image[index(pixel_y, pixel_x, size_y, size_x, channel++)] = (uint8_t)(green * UINT8_MAX);
 			image[index(pixel_y, pixel_x, size_y, size_x, channel++)] = (uint8_t)(blue * UINT8_MAX);
 		}
+
 	}
+
+	// gather result rows back to root
+	MPI_Gather(image.data(), num_channels*size_y*size_x/numproc, MPI_BYTE, image.data(), num_channels*size_y*size_x/numproc, MPI_BYTE, 0, MPI_COMM_WORLD);
+	
+	if (rank == 0){
+			constexpr int stride_bytes = 0;
+			stbi_write_png("mandelbrot_mpi.png", size_x, size_y, num_channels, image.data(), stride_bytes);
+	}
+
+	MPI_Finalize(); // cleanup
 	
 	auto time_end = std::chrono::high_resolution_clock::now();
 	auto time_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time_end - time_start).count();
@@ -131,10 +161,7 @@ int main(int argc, char **argv) {
 
 	Image image(num_channels * size_x * size_y);
 
-	calcMandelbrot(image, size_x, size_y);
-
-	constexpr int stride_bytes = 0;
-	stbi_write_png("mandelbrot_seq.png", size_x, size_y, num_channels, image.data(), stride_bytes);
+	calcMandelbrot(image, size_x, size_y, argc, argv);
 
 	return EXIT_SUCCESS;
 }
